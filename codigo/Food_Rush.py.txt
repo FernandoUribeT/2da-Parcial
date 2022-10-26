@@ -1,0 +1,273 @@
+from cgitb import text
+from re import X
+import pygame
+import os
+import random
+pygame.init()
+
+#Global constants
+SCREEN_HEIGHT = 720
+SCREEN_WIDTH = 1280
+SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+sonido_saltar = pygame.mixer.Sound(salto.mp3)
+
+sonido_musica = pygame.mixer.music.load(musica.mp3)
+sonido_musica = pygame.mixer.music.play(-1)
+sonido_musica = pygame.mixer.music.set_volume(0.8)
+
+CORRER = [pygame.image.load( correr1.png),
+pygame.image.load( correr2.png),
+pygame.image.load( correr3.png),
+pygame.image.load( correr4.png),
+pygame.image.load( correr3.png).convert()]
+
+AGACHAR = pygame.image.load( agachar.png).convert()
+SALTAR = pygame.image.load( correr1.png).convert()
+
+ZANAHORIA = [pygame.image.load(os.path.join( zanahoria.png)),
+pygame.image.load(os.path.join(zanahoria.png)),
+pygame.image.load(os.path.join(zanahoria.png)).convert()]
+
+PAPAS = [pygame.image.load(os.path.join( papas.png)),
+pygame.image.load(os.path.join(papas.png)),
+pygame.image.load(os.path.join(papas.png)).convert()]
+
+BG = pygame.image.load( Track.png).convert()
+x = 0
+pygame.display.set_caption(Food Rush)
+icono = pygame.image.load(zanahoria.png)
+pygame.display.set_icon(icono)
+Fuente=pygame.font.SysFont(Arial,30)
+aux = 1
+
+
+class conejo
+    X_POS = 50
+    Y_POS = 468
+    SALTAR_VEL = 8.5
+    Y_POS_AGACHAR = 495
+    
+    def __init__(self)
+        self.correr_img = CORRER
+        self.saltar_img = SALTAR
+        self.agachar_img = AGACHAR
+
+        self.conejo_correr = True
+        self.conejo_saltar = False
+        self.conejo_agachar = False
+
+        self.step_index = 0
+        self.SALTAR_vel = self.SALTAR_VEL
+        self.image = self.correr_img[4]
+        self.conejo_rect = self.image.get_rect()
+        
+        self.conejo_rect.x = self.X_POS
+        self.conejo_rect.y = self.Y_POS
+        self.rect = self.image.get_rect()
+        self.image.set_colorkey((255,255,255))
+
+    def update(self, userInput)
+        
+        if self.conejo_agachar
+            self.agachar()
+        if self.conejo_correr
+            self.correr()
+        if self.conejo_saltar
+            self.saltar()
+
+        if self.step_index = 25
+            self.step_index = 0
+
+        if userInput[pygame.K_UP] and not self.conejo_saltar
+            self.conejo_agachar = False
+            self.conejo_correr = False
+            self.conejo_saltar = True
+
+
+        elif userInput[pygame.K_DOWN] and not self.conejo_saltar
+            self.conejo_agachar = True
+            self.conejo_correr = False
+            self.conejo_saltar = False
+        elif not (self.conejo_saltar or userInput[pygame.K_DOWN])
+            self.conejo_agachar = False
+            self.conejo_correr = True
+            self.conejo_saltar = False
+            
+
+    def agachar(self)
+        self.image = self.agachar_img
+        self.conejo_rect = self.image.get_rect()
+        self.conejo_rect.x = self.X_POS
+        self.conejo_rect.y = self.Y_POS_AGACHAR
+        self.step_index += 1   
+        self.image.set_colorkey((255,255,255))  
+
+    def correr(self)
+        self.image = self.correr_img[self.step_index  5]
+        self.conejo_rect = self.image.get_rect()
+        self.conejo_rect.x = self.X_POS
+        self.conejo_rect.y = self.Y_POS
+        self.step_index += 1
+        self.image.set_colorkey((255,255,255))
+   
+
+    def saltar(self)
+        self.image = self.saltar_img
+        if self.conejo_saltar
+            self.conejo_rect.y -= self.SALTAR_vel  4
+            self.SALTAR_vel -= 0.8
+        if self.SALTAR_vel  - self.SALTAR_VEL
+            self.conejo_saltar = False
+            self.SALTAR_vel = self.SALTAR_VEL
+            self.image.set_colorkey((255,255,255))
+
+    def draw(self, SCREEN)
+        SCREEN.blit(self.image, (self.conejo_rect.x, self.conejo_rect.y))
+        self.image.set_colorkey((255,255,255))    
+
+class Obstaculos
+    def __init__(self, image, type)
+        self.image = image
+        self.type = type
+        self.rect = self.image[self.type].get_rect()
+        self.rect.x = SCREEN_WIDTH
+
+    def update(self)
+        self.rect.x -= game_speed
+        if self.rect.x  -self.rect.width
+            obstaculos.pop()
+        
+
+    def draw(self, SCREEN)
+        SCREEN.blit(self.image[self.type], self.rect)
+        
+
+
+class Papas(Obstaculos)
+    def __init__(self, image)
+        self.type = random.randint(0, 2)
+        super().__init__(image, self.type)
+        self.rect.y = 450
+        
+        
+
+class Zanahoria(Obstaculos)
+    def __init__(self, image)
+        self.type = random.randint(0, 2)
+        super().__init__(image, self.type)
+        self.rect.y = 450
+       
+
+def main()
+    global game_speed, reloj, obstaculos
+    run = True
+    clock = pygame.time.Clock()
+    player = conejo()
+    
+    obstaculos = []
+    game_speed = 14
+    x = 0
+    reloj = 0
+    font = pygame.font.Font('freesansbold.ttf', 20)
+    death_count = 0
+
+
+    def score()
+        global reloj, game_speed
+        reloj += 1
+        if reloj % 1000 == 0
+            game_speed += 1
+
+        text = font.render(Time  + str(reloj), True, (0, 0, 0))
+        textRect = text.get_rect()
+        textRect.center = (1200, 60)
+        SCREEN.blit(text, textRect)
+
+    
+
+    Rojo = (255,50,50)
+    Verde = (50,255,50)
+
+    fuente = pygame.font.Font(None,25)
+    texto = fuente.render(LIFE BAR,0,(200,20,20))
+    barra_roja = pygame.Rect(50,60,200,30)
+    barra_verde = pygame.Rect(50,60,200,30)
+
+   
+
+    while run
+        for event in pygame.event.get()
+            if event.type == pygame.QUIT
+                run = False
+            if event.type == pygame.KEYDOWN
+                if event.key == pygame.K_UP
+                    sonido_saltar.play()
+                    SALTAR=True
+        userInput = pygame.key.get_pressed()
+
+        x_relativa = x % BG.get_rect().width
+        SCREEN.blit(BG,(x_relativa - BG.get_rect().width,0))
+        if x_relativa  SCREEN_WIDTH
+            SCREEN.blit(BG,(x_relativa,0)) 
+        x -= 10
+        SCREEN.blit(texto,(110,40))
+
+        pygame.draw.rect(SCREEN,Rojo,barra_roja)
+        pygame.draw.rect(SCREEN,Verde,barra_verde)
+        player.draw(SCREEN)  
+        player.update(userInput)
+        
+        if len(obstaculos) == 0
+            if random.randint(0, 2) == 0
+                obstaculos.append(Papas(PAPAS))
+            elif random.randint(0, 2) == 1
+                obstaculos.append(Zanahoria(ZANAHORIA))
+           
+
+        for obstaculo in obstaculos
+            obstaculo.draw(SCREEN)
+            obstaculo.update()
+            if player.conejo_rect.colliderect(obstaculo.rect)
+                sonido_saltar.play()
+
+
+        score()
+
+    
+        clock.tick(30)
+        pygame.display.update()
+
+
+
+def menu(death_count)
+    global reloj
+    run = True
+    while run
+        SCREEN.fill((192, 248, 242))
+        font = pygame.font.Font('freesansbold.ttf', 30)
+        
+
+        if death_count == 0
+            text = font.render(Presiona cualquier tecla para empezar, True, (0, 0, 0))
+        elif death_count  0
+            text = font.render(Presiona cualquier tecla para reiniciar, True, (0, 0, 0))
+            score = font.render(Tiempo  + str(reloj), True, (0, 0, 0))
+            scoreRect = score.get_rect()
+            scoreRect.center = (SCREEN_WIDTH  2, SCREEN_HEIGHT  2 + 50)
+            SCREEN.blit(score, scoreRect)
+        textRect = text.get_rect()
+        textRect.center = (SCREEN_WIDTH  2, SCREEN_HEIGHT  2)
+        SCREEN.blit(text, textRect)
+        SCREEN.blit(CORRER[0], (SCREEN_WIDTH  2 - 20, SCREEN_HEIGHT  2 - 140))
+        pygame.display.update()
+        
+
+        for event in pygame.event.get()
+            if event.type == pygame.QUIT
+                run = False
+            if event.type == pygame.KEYDOWN
+                main()
+
+
+menu(death_count=0)
